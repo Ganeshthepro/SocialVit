@@ -1,78 +1,75 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../../state";
-import PostWidget from "./PostWidget";
-import React from "react";
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPosts } from '../../state'
+import PostWidget from './PostWidget'
+import React from 'react'
 
 const PostsWidget = ({ userId, isProfile = false }) => {
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts);
-  const token = useSelector((state) => state.token);
-  const [loading, setLoading] = React.useState(true);
+  const dispatch = useDispatch()
+  const posts = useSelector((state) => state.posts)
+  const token = useSelector((state) => state.token)
+  const [loading, setLoading] = React.useState(true)
 
   const getPosts = async () => {
     try {
-      const response = await fetch("http://localhost:3001/post", {
-        method: "GET",
+      const response = await fetch('http://localhost:3001/post', {
+        method: 'GET',
         headers: { Authorization: `Bearer ${token}` },
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to fetch posts");
+        throw new Error('Failed to fetch posts')
       }
 
-      const data = await response.json();
-      dispatch(setPosts({ posts: Array.isArray(data) ? data : [] }));
+      const data = await response.json()
+      dispatch(setPosts({ posts: Array.isArray(data) ? data : [] }))
     } catch (error) {
-      console.error("Error fetching posts:", error.message);
+      console.error('Error fetching posts:', error.message)
     }
-  };
+  }
 
   const getUserPosts = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/post/${userId}/post`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`http://localhost:3001/post/${userId}/post`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to fetch user posts");
+        throw new Error('Failed to fetch user posts')
       }
 
-      const data = await response.json();
-      dispatch(setPosts({ posts: Array.isArray(data) ? data : [] }));
+      const data = await response.json()
+      dispatch(setPosts({ posts: Array.isArray(data) ? data : [] }))
     } catch (error) {
-      console.error("Error fetching user posts:", error.message);
+      console.error('Error fetching user posts:', error.message)
     }
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setLoading(true)
 
         if (isProfile) {
-          await getUserPosts();
+          await getUserPosts()
         } else {
-          await getPosts();
+          await getPosts()
         }
 
-        setLoading(false);
+        setLoading(false)
       } catch (error) {
-        console.error("Error fetching data:", error.message);
-        setLoading(false);
+        console.error('Error fetching data:', error.message)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
+    fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isProfile]);
+  }, [isProfile])
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Loading...</p>
   }
 
   return (
@@ -105,7 +102,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         )
       )}
     </>
-  );
-};
+  )
+}
 
-export default PostsWidget;
+export default PostsWidget
